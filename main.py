@@ -5,6 +5,11 @@ import numpy as np
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
+
+def process_frame(frame):
+    print("Hi :)")
+
+
 if __name__ == "__main__":
 
     # VideoCapture([Filename String]) for pre-recorded video
@@ -19,11 +24,8 @@ if __name__ == "__main__":
     else:
         cap = cv2.VideoCapture(0)
 
-    # Use first frame to init Feature Extractor
-    # F is some kinda parameter in the intrinsic Matrix, not sure
     while(cap.read()[1] is None):
         print("Waiting for Video")
-    fe = FeatureExtractor(cap.read()[1], F=1)
 
     # Main Detection Loop
     while cap.isOpened():
