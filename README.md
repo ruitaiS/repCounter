@@ -7,7 +7,8 @@ Mediapipe
 
 
 Landmarks:
-![Pose Landmarks][landmarks.png "Pose Landmarks"]
+
+<p align="center"><img src="landmarks.png"></p>
 
 For our basic squat detection, we are interested mainly in the angle formed at the knee, and we also want to ensure that the subject's feet do not leave the ground (eg. sitting in a chair and bending their knees would not be registered as squatting).
 
@@ -15,4 +16,4 @@ More complex implementations might take into consideration the alignment of the 
 
 
 
-Each landmark has (X,Y,Z) coordinates. If we consider the thigh and shin as two vectors with a common point at the knee, we can find the angle with the formula ![Vector Angle][angle.gif "Vector Angle Formula"]
+Each landmark has (X,Y,Z) coordinates. If we consider the thigh and shin as two vectors with a common point at the knee, we can find the angle with the formula <img src="angle.gif">
