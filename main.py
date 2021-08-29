@@ -36,11 +36,18 @@ if __name__ == "__main__":
 
                 #Detect Pose Landmarks
                 landmarks = pose.process(frame).pose_landmarks
+                print(landmarks)
                 
-                #Draw overlay
+                #Allow write, convert back to BGR
                 frame.flags.writeable = True
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-                mp_drawing.draw_landmarks(frame, landmarks, mp_pose.POSE_CONNECTIONS)
+
+
+                #Draw overlay with parameters:
+                #(frame, landmarks, list of connected landmarks, landmark draw spec, connection draw spec)
+                mp_drawing.draw_landmarks(frame, landmarks, mp_pose.POSE_CONNECTIONS, mp_drawing.DrawingSpec(color=(0,255,0), thickness = 2, circle_radius = 2), mp_drawing.DrawingSpec(color=(0,0,255), thickness = 2, circle_radius = 2))
+
+
 
                 cv2.imshow("image", frame)
                 cv2.waitKey(1)
