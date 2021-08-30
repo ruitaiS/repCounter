@@ -1,5 +1,5 @@
 Install Dependencies:
-playsound
+simpleaudio
 OpenCV
 Numpy
 Mediapipe
