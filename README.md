@@ -4,9 +4,9 @@ A simple squat counter made using openCV and mediapipe. Stand in full view of yo
 
 ### Dependencies:
 
-- [Simpleaudio](https://simpleaudio.readthedocs.io/)
 - [OpenCV](https://opencv.org/)
-- [Numpy](https://numpy.org/install/)
 - [Mediapipe](https://google.github.io/mediapipe/)
+- [Numpy](https://numpy.org/install/)
+- [Simpleaudio](https://simpleaudio.readthedocs.io/)
 
 \*Note Mediapipe only supports Python versions 3.6-3.8.
