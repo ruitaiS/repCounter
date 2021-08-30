@@ -44,39 +44,41 @@ if __name__ == "__main__":
     mp_pose = mp.solutions.pose
 
     # Init Video Feed
-    # Opens file if passed as parameter
+    # Opens file if passed as parameter from terminal
     # Else Defaults to webcam
     cap = None
     if len(sys.argv) > 1:
         cap = cv2.VideoCapture(str(sys.argv[1]))
     else:
         cap = cv2.VideoCapture(0)
-
     while(cap.read()[1] is None):
         print("Waiting for Video")
 
     # Main Detection Loop
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
 
+        # Initialize Reps and Body State
         repCount = 0
         lastState = 9
 
         while cap.isOpened():
             ret, frame = cap.read()
             if ret == True:
-
-                # Convert frame to RGB
-                # Writeable = False forces pass by ref (faster)
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frame.flags.writeable = False
-
-                # Detect Pose Landmarks
-                # lm used for drawing
-                # lm_arr is actually indexable with .x, .y, .z attr
                 try:
+                    # Convert frame to RGB
+                    # Writeable = False forces pass by ref (faster)
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    frame.flags.writeable = False
+
+                    # Detect Pose Landmarks
+                    # lm used for drawing
+                    # lm_arr is actually indexable with .x, .y, .z attr
                     lm = pose.process(frame).pose_landmarks
                     lm_arr = lm.landmark
                 except:
+                    print("Please Step Into Frame")
+                    cv2.imshow("Squat Rep Counter", frame)
+                    cv2.waitKey(1)
                     continue
 
                 # Allow write, convert back to BGR
@@ -89,11 +91,9 @@ if __name__ == "__main__":
                     0, 255, 0), thickness=2, circle_radius=2), mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2))
 
                 # Calculate Angle
-                # Hand-Elbow-Shoulder - R: 16, 14, 12 // L: 15, 13, 11
-                #rAngle = findAngle(lm_arr[16], lm_arr[14], lm_arr[12])
-                #lAngle = findAngle(lm_arr[15], lm_arr[13], lm_arr[11])
-
-                # Hip -Knee-Foot - R: 24, 26, 28 // L: 23, 25, 27
+                # Hip -Knee-Foot Indices:
+                # R: 24, 26, 28
+                # L: 23, 25, 27
                 rAngle = findAngle(lm_arr[24], lm_arr[26], lm_arr[28])
                 lAngle = findAngle(lm_arr[23], lm_arr[25], lm_arr[27])
 
@@ -105,10 +105,10 @@ if __name__ == "__main__":
                 # Final state is product of two leg states
                 # 0 -> One or both legs not being picked up
                 # Even -> One or both legs are still transitioning
-                # Odd ->
-                # 1 -> Squatting
-                # 9 -> Upright
-                # 3 -> One squatting, one upright
+                # Odd
+                #   1 -> Squatting
+                #   9 -> Upright
+                #   3 -> One squatting, one upright
 
                 # Only update lastState on 1 or 9
 
@@ -120,14 +120,14 @@ if __name__ == "__main__":
                 elif (state % 2 == 0 or rState != lState):  # One or both legs still transitioning
                     if (lastState == 1):
                         if (lState == 2 or lState == 1):
-                            print("Fully extend left leg" + (str)(lAngle))
+                            print("Fully extend left leg")
                         if (rState == 2 or lState == 1):
-                            print("Fully extend right leg" + (str)(rAngle))
+                            print("Fully extend right leg")
                     else:
                         if (lState == 2 or lState == 3):
-                            print("Fully retract left leg" + (str)(lAngle))
+                            print("Fully retract left leg")
                         if (rState == 2 or lState == 3):
-                            print("Fully retract right leg" + (str)(rAngle))
+                            print("Fully retract right leg")
                 else:
                     if (state == 1 or state == 9):
                         if (lastState != state):
@@ -137,11 +137,7 @@ if __name__ == "__main__":
                                 repCount += 1
                 print("Squats: " + (str)(repCount))
 
-                #print("Right" + (str)(rAngle))
-                #print("Right" + (str)(rAngle) + "Left" + (str)(lAngle))
-                #print("Right" + (str)(rState) + "Left" + (str)(lState))
-
-                cv2.imshow("image", frame)
+                cv2.imshow("Squat Rep Counter", frame)
                 cv2.waitKey(1)
             else:
                 cap.release()
