@@ -10,3 +10,5 @@ A simple squat counter made using OpenCV and MediaPipe. Stand in full view of yo
 - [Simpleaudio](https://simpleaudio.readthedocs.io/)
 
 \*Note MediaPipe only supports Python versions 3.6-3.8.
+
+<p align="center"><img src="squats.jpg"></p>
