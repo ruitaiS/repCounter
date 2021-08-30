@@ -1,8 +1,11 @@
-Install Dependencies:
-simpleaudio
-OpenCV
-Numpy
-Mediapipe
+# Squat Rep Counter
+
+### Dependencies:
+
+⋅⋅*[Simpleaudio](https://simpleaudio.readthedocs.io/)
+⋅⋅*[OpenCV](https://opencv.org/)
+⋅⋅*[Numpy](https://numpy.org/install/)
+⋅⋅*[Mediapipe](https://google.github.io/mediapipe/)
 
 \*Note Mediapipe requires Python version 3.6-3.8.
 
