@@ -1,6 +1,6 @@
 # Squat Rep Counter
 
-A simple squat counter made using openCV and mediapipe. Stand in full view of your webcam and do some squats! A ping sound will play every time you do one correctly.
+A simple squat counter made using openCV and mediapipe. Stand in full view of your webcam and do some squats! A ping sound will play every time you do one correctly, and a running count is displayed to the console.
 
 ### Dependencies:
 
