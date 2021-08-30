@@ -17,3 +17,12 @@ More complex implementations might take into consideration the alignment of the 
 
 
 Each landmark has (X,Y,Z) coordinates. If we consider the thigh and shin as two vectors with a common point at the knee, we can find the angle with the formula <img src="angle.gif">
+
+
+## Counting Repetitions
+One rep consists of moving from a standing position, into a squat, and then back to standing.
+
+These positions are defined by the angle formed at the knee - 0-15 degrees for standing, and 75-90 degrees for squatting.
+
+In order to count as a rep, both knees must be registered within the angle range at the same time.
+
