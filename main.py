@@ -28,11 +28,13 @@ def findAngle(a, b, c, minVis=0.8):
 
 def legState(angle):
     if (angle < 0):
-        return -1  # Joint is not being picked up
+        return 0  # Joint is not being picked up
     elif (angle < 105):
-        return 1  # Within squat range
+        return 1  # Squat range
+    elif (angle < 150):
+        return 2  # Transition range
     else:
-        return 0  # Out of squat range
+        return 3  # Upright range
 
 
 if __name__ == "__main__":
@@ -57,11 +59,7 @@ if __name__ == "__main__":
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
 
         repCount = 0
-
-        # -1 - Failed Detection
-        #  0 - Standing
-        #  1 - Squatting
-        lastState = 0
+        lastState = 9
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -92,34 +90,52 @@ if __name__ == "__main__":
 
                 # Calculate Angle
                 # Hand-Elbow-Shoulder - R: 16, 14, 12 // L: 15, 13, 11
-                rAngle = findAngle(lm_arr[16], lm_arr[14], lm_arr[12])
-                lAngle = findAngle(lm_arr[15], lm_arr[13], lm_arr[11])
+                #rAngle = findAngle(lm_arr[16], lm_arr[14], lm_arr[12])
+                #lAngle = findAngle(lm_arr[15], lm_arr[13], lm_arr[11])
 
                 # Hip -Knee-Foot - R: 24, 26, 28 // L: 23, 25, 27
-                #rAngle = findAngle(lm_arr[24], lm_arr[26], lm_arr[28])
-                #lAngle = findAngle(lm_arr[23], lm_arr[25], lm_arr[27])
+                rAngle = findAngle(lm_arr[24], lm_arr[26], lm_arr[28])
+                lAngle = findAngle(lm_arr[23], lm_arr[25], lm_arr[27])
 
                 # Calculate state
                 rState = legState(rAngle)
-                lState = 1  # legState(lAngle)
-
+                lState = legState(lAngle)
                 state = rState*lState
-                if (state < 0):
-                    if (rState < 0):
-                        print("Right Leg Not Detected")
-                    if (lState < 0):
-                        print("Left Leg Not Detected")
-                elif (state == 1):
-                    if (lastState == 0):
-                        repCount += 1
-                        print("GOOD!")
-                    else:
-                        print("Reset")
-                else:
-                    print("Squat!")
 
-                lastState = state
-                print(repCount)
+                # Final state is product of two leg states
+                # 0 -> One or both legs not being picked up
+                # Even -> One or both legs are still transitioning
+                # Odd ->
+                # 1 -> Squatting
+                # 9 -> Upright
+                # 3 -> One squatting, one upright
+
+                # Only update lastState on 1 or 9
+
+                if (state == 0):  # One or both legs not detected
+                    if (rState == 0):
+                        print("Right Leg Not Detected")
+                    if (lState == 0):
+                        print("Left Leg Not Detected")
+                elif (state % 2 == 0 or rState != lState):  # One or both legs still transitioning
+                    if (lastState == 1):
+                        if (lState == 2 or lState == 1):
+                            print("Fully extend left leg" + (str)(lAngle))
+                        if (rState == 2 or lState == 1):
+                            print("Fully extend right leg" + (str)(rAngle))
+                    else:
+                        if (lState == 2 or lState == 3):
+                            print("Fully retract left leg" + (str)(lAngle))
+                        if (rState == 2 or lState == 3):
+                            print("Fully retract right leg" + (str)(rAngle))
+                else:
+                    if (state == 1 or state == 9):
+                        if (lastState != state):
+                            lastState = state
+                            if (lastState == 1):
+                                print("GOOD!")
+                                repCount += 1
+                print("Squats: " + (str)(repCount))
 
                 #print("Right" + (str)(rAngle))
                 #print("Right" + (str)(rAngle) + "Left" + (str)(lAngle))
