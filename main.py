@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import sys
 
+import simpleaudio as sa
+
 
 def findAngle(a, b, c, minVis=0.8):
     # Finds the angle at b with endpoints a and c
@@ -42,6 +44,9 @@ if __name__ == "__main__":
     # Init mediapipe drawing and pose
     mp_drawing = mp.solutions.drawing_utils
     mp_pose = mp.solutions.pose
+
+    # Init sound
+    sound = sa.WaveObject.from_wave_file("ding.wav")
 
     # Init Video Feed
     # Opens file if passed as parameter from terminal
@@ -134,6 +139,7 @@ if __name__ == "__main__":
                             lastState = state
                             if (lastState == 1):
                                 print("GOOD!")
+                                sound.play()
                                 repCount += 1
                 print("Squats: " + (str)(repCount))
 
